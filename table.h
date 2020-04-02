@@ -24,6 +24,9 @@ typedef struct Node
   Ship value;
   int amount;
   int index;
+  int gravity_point_row;
+  int gravity_point_col;
+  int rotate;
 } Node;
 
 typedef struct Player
@@ -34,7 +37,7 @@ typedef struct Player
   Cell matriz[10][10];
 } Player;
 
-void chooseShips(Player player);
+void chooseShips(Player *player);
 
 void updateCell(Cell *, int, Ship *);
 Cell *newCell();
@@ -43,4 +46,4 @@ void shotCell(Cell *);
 void decreaseActiveCell(Ship *);
 Ship *newShip(int);
 void shipSank(Ship ship); //condiçao para ver se ainda ha barcos
-void setUp(int size, Cell matriz[10][10]);
+void setUp(int size, Cell matriz[10][10], Player Player);
