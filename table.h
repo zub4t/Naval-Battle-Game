@@ -47,3 +47,6 @@ void decreaseActiveCell(Ship *);
 Ship *newShip(int);
 void shipSank(Ship ship); //condiçao para ver se ainda ha barcos
 void setUp(int size, Cell matriz[10][10], Player Player);
+void putSingleShip(Player *Player,int index);
+void initializeMatriz(Player *Player, int size);
+void print(Player *player);

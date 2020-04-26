@@ -15,24 +15,15 @@ int main()
      printf("\033[0m");
 
      //  ------------- teste ----------------
-     Player p1 = {0, malloc(sizeof(char)*50),malloc(sizeof(Node)*100)};
-     Player p2 = {0, malloc(sizeof(char)*50),malloc(sizeof(Node)*100)};
+     Player p1 = {0, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100)};
+     Player p2 = {0, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100)};
      puts("primeiro jogador escolhendo navios");
+     initializeMatriz(&p1, 10);
      chooseShips(&p1);
-     setUp(10, p1.matriz, p1);
      puts("segundo  jogador escolhendo navios");
+     initializeMatriz(&p2, 10);
      chooseShips(&p2);
-     setUp(10, p2.matriz, p2);
 
-     for (int i = 0; i < 10; i++)
-     {
-          for (int j = 0; j < 10; j++)
-          {
-               printf("%d", p1.matriz[i][j].state);
-          }
-          printf("\n");
-     }
-     // ----------------- / / -------------------------
 
      return 0;
 }
@@ -40,32 +31,263 @@ int main()
 void chooseShips(Player *player)
 {
      int amount = 0, size = 0;
-     size = 5;
+     size = 4;
      player->myShips = malloc(sizeof(Node) * size);
 
-     for (int i = 1; i <= size; i++)
+     for (int i = 0; i < size; i++)
      {
-          printf("Escolha a quantidade de barcos do tipo  %d \n", i);
-          scanf("%d", &amount);
+
           player->myShips[i].gravity_point_row = 0;
           player->myShips[i].gravity_point_col = 0;
           player->myShips[i].rotate = 0;
-          for (int j = 0; j < amount; j++)
+          int row = 0;
+          int col = 0;
+          int rotate = 0;
+
+          int flag = 0;
+          do
           {
-               printf("Para o barco de nº %d qual é  celula do centro?", j);
-               int row = 0;
-               int col = 0;
-               int rotate = 0;
+               printf("Defina a linha e coluna para colocar o barco de nº %d ex: 2 5 \n ", i);
                scanf("%d", &row);
                scanf("%d", &col);
+               flag = 0;
                puts("Defina a rotação do barco");
+
                scanf("%d", &rotate);
-               player->myShips[i].gravity_point_row = row;
-               player->myShips[i].gravity_point_col = col;
-               player->myShips[i].rotate = rotate;
-          }
+               switch (i)
+               {
+               case 0:
+                    switch (rotate)
+                    {
+                    case 0:
+                         if (col + 2 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (row + 2 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    case 90:
+                         if (row - 1 < 0)
+
+                              if (col + 2 > 10)
+                              {
+                                   puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                                   flag = 1;
+                              }
+                         if (row + 1 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (col - 2 < 0)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    case 180:
+                         if (row - 1 < 0)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (col - 1 < 0)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (col + 2 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    case 270:
+                         if (col - 1 < 0)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (row - 1 < 0)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (row + 1 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (col + 2 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    }
+
+                    break;
+
+               case 1:
+                    switch (rotate)
+                    {
+                    case 0:
+                         if (row + 3 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (col + 3 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+
+                    case 90:
+                         if (row + 2 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (col + 3 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    case 180:
+                         if (row + 2 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (col + 2 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    case 270:
+                         if (col + 2 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (row + 2 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (col - 1 < 0)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    }
+                    break;
+
+               case 2:
+                    switch (rotate)
+                    {
+                    case 0:
+                         if (row + 3 > 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    case 90:
+                         if (col + 3 > 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    case 180:
+                         if (row + 3 > 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    case 270:
+                         if (col + 3 > 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    }
+                    break;
+               case 3:
+                    switch (rotate)
+                    {
+                    case 0:
+                         if (col + 3 > 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (row + 3 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    case 90:
+                         if (row + 3 > 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (col + 3 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    case 180:
+                         if (col + 3 > 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (row + 3 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    case 270:
+                         if (row + 3 > 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         if (col + 3 >= 10)
+                         {
+                              puts("invalida rotação nessa posição a pesça saira do tabuleiro");
+                              flag = 1;
+                         }
+                         break;
+                    }
+               }
+          } while (flag);
+
+          player->myShips[i].gravity_point_row = row;
+          player->myShips[i].gravity_point_col = col;
+          player->myShips[i].rotate = rotate;
           player->myShips[i].value.type = i;
           player->myShips[i].amount = amount;
           player->myShips[i].index = i;
+          putSingleShip(player, i);
+          print(player);
      }
 }
