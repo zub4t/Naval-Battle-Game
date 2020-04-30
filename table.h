@@ -16,7 +16,7 @@ typedef struct Cell
 {
   int state; // 0 = empty, 1 = piece without being hitted,
              // 2 = piece hitted, 3 = missed shot
-  int shot_counter;
+  int shotState;
   Ship *bellongsTo; // if cell is empty bellongsTo is null
 } Cell;
 typedef struct Node
@@ -32,6 +32,7 @@ typedef struct Node
 typedef struct Player
 {
   int ID_P;
+  int activeShips;
   char *name;
   Node *myShips;
   Cell matriz[10][10];
@@ -45,5 +46,15 @@ int isFree(Cell *);
 void shotCell(Cell *);
 void decreaseActiveCell(Ship *);
 Ship *newShip(int);
-void shipSank(Ship ship); //condiçao para ver se ainda ha barcos
 void setUp(int size, Cell matriz[10][10], Player Player);
+void putSingleShip(Player *Player,int index);
+void initializeMatriz(Player *Player, int size);
+void print(Player *player);
+
+void startGame(Player *p1, Player *p2);
+
+void updateCellShort(Cell *cell, int state);
+int shipSank(Ship *ship);
+void print_table(Player *player, int flag);
+void changePlayer();
+int  ScanAndShot(Player *source_player,Player *target_player);
