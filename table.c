@@ -605,10 +605,28 @@ void putSingleShip(Player *player, int index)
 }
 void print(Player *player)
 {
+     printf(RED);
+     printf("  -");
      for (int i = 0; i < 10; i++)
      {
+          printf("%d--", i);
+     }
+     puts("");
+     for (int i = 0; i < 10; i++)
+     {
+          printf(RED);
+          printf("%d ", i);
+          printf(RESET);
           for (int j = 0; j < 10; j++)
           {
+               if (player->matriz[i][j].state == 1)
+               {
+                    printf(BLUE);
+               }
+               else
+               {
+                    printf(RESET);
+               }
                printf("-%d-", player->matriz[i][j].state);
           }
           puts("");
@@ -616,55 +634,82 @@ void print(Player *player)
 }
 //--------------------------------------------------------------------
 
-void updateCellShort(Cell *cell, int state){
+void updateCellShort(Cell *cell, int state)
+{
      cell->state = state;
 }
-int shipSank(Ship *ship){
-     if(ship->ActiveCells == 0){
+int shipSank(Ship *ship)
+{
+     if (ship->ActiveCells == 0)
+     {
           return 1;
      }
      return 0;
-
 }
 
-void print_table(Player *player, int flag){
+void print_table(Player *player, int flag)
+{
      int SIZE = 10; // temporario
      printf("Os seus barcos\n");
-     for(int i = 0; i < SIZE; i++){
-          for(int j = 0; j < SIZE; j++){
-               switch (player->matriz[i][j].state) {
-                    case 0: printf(" ~ "); break;
+     for (int i = 0; i < SIZE; i++)
+     {
+          for (int j = 0; j < SIZE; j++)
+          {
+               switch (player->matriz[i][j].state)
+               {
+               case 0:
+                    printf(" ~ ");
+                    break;
 
-                    case 1: printf(" # "); break;
+               case 1:
+                    printf(" # ");
+                    break;
 
-                    case 2: printf(" X "); break;
+               case 2:
+                    printf(" X ");
+                    break;
 
-                    case 3: printf(" O "); break;
+               case 3:
+                    printf(" O ");
+                    break;
                }
           }
           printf("\n");
      }
 
      printf("Os seus disparos\n");
-     for(int i = 0; i < SIZE; i++){
-          for(int j = 0; j < SIZE; j++){
-               switch (player->matriz[i][j].shotState) {
-                    case 0: printf(" ~ "); break;
+     for (int i = 0; i < SIZE; i++)
+     {
+          for (int j = 0; j < SIZE; j++)
+          {
+               switch (player->matriz[i][j].shotState)
+               {
+               case 0:
+                    printf(" ~ ");
+                    break;
 
-                    case 1: printf(" # "); break;
+               case 1:
+                    printf(" # ");
+                    break;
 
-                    case 2: printf(" X "); break;
+               case 2:
+                    printf(" X ");
+                    break;
 
-                    case 3: printf(" O "); break;
+               case 3:
+                    printf(" O ");
+                    break;
                }
           }
           printf("\n");
      }
-     if(flag){
+     if (flag)
+     {
           puts("Prima n para continuar");
           char next = ' ';
-          while(next != 'n'){
-               scanf("%c",&next);
+          while (next != 'n')
+          {
+               scanf("%c", &next);
           }
      }
      // puts("Prima n para continuar");
@@ -674,23 +719,27 @@ void print_table(Player *player, int flag){
      // }
 }
 
-void changePlayer(){
+void changePlayer()
+{
      puts("Proximo jogador prima n tecla para jogar");
      char next = ' ';
-     while(next != 'n'){
-          scanf("%c",&next);
+     while (next != 'n')
+     {
+          scanf("%c", &next);
      }
-
 }
 
-int  ScanAndShot(Player *source_player,Player *target_player){
-     int x,y;
-     while(1){
+int ScanAndShot(Player *source_player, Player *target_player)
+{
+     int x, y;
+     while (1)
+     {
           printf("escolha o alvo dos seus disparos.\n");
-          scanf("%d",&x);
-          scanf("%d",&y); // cornfirmar se esta no range
-          if(target_player->matriz[x][y].state == EMPTY){
-               updateCellShort(&target_player->matriz[x][y],MISSED_SHOT);
+          scanf("%d", &x);
+          scanf("%d", &y); // cornfirmar se esta no range
+          if (target_player->matriz[x][y].state == EMPTY)
+          {
+               updateCellShort(&target_player->matriz[x][y], MISSED_SHOT);
                source_player->matriz[x][y].shotState = MISSED_SHOT;
                system("clear");
 
@@ -698,31 +747,29 @@ int  ScanAndShot(Player *source_player,Player *target_player){
 
                return 0;
           }
-          else if(target_player->matriz[x][y].state == PIECE){
-               updateCellShort(&target_player->matriz[x][y],PIECE_HITTED);
-               source_player->matriz[x][y].shotState= PIECE_HITTED;
+          else if (target_player->matriz[x][y].state == PIECE)
+          {
+               updateCellShort(&target_player->matriz[x][y], PIECE_HITTED);
+               source_player->matriz[x][y].shotState = PIECE_HITTED;
                target_player->matriz[x][y].bellongsTo->ActiveCells--;
                system("clear");
                puts("Barco atingido!");
-               if(shipSank(target_player->matriz[x][y].bellongsTo)){
+               if (shipSank(target_player->matriz[x][y].bellongsTo))
+               {
                     target_player->activeShips--;
                     puts("Barco afundado!");
                }
-               if(target_player->activeShips == 0){
+               if (target_player->activeShips == 0)
+               {
                     puts("Venceu o jogo!");
                     //flag para acabar o jogo
                     return 1;
-
                }
-
 
                return 0;
           }
 
           puts("Disparo repetido, tente outra vez!");
-
-
-
      }
 
      return 0;
