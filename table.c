@@ -57,327 +57,26 @@ void decreaseActiveCell(Ship *ship)
      }
 }
 
-Ship *newShip(int type)
+Ship *newShip(int type, int n)
 {
      Ship *ship = malloc(sizeof(Ship));
      ship->type = type;
-     ship->ActiveCells = 10; // missing a function to calculate the total
-                             //amount of cells of a ship
+     ship->ActiveCells = n; // missing a function to calculate the total
+                            //amount of cells of a ship
      return ship;
 }
-void printMatriz(Cell matriz[10][10])
+void printMatriz(Cell matriz[40][40], int n)
 {
-     for (int i = 0; i < 10; i++)
+     for (int i = 0; i < n; i++)
      {
-          for (int j = 0; j < 10; j++)
+          for (int j = 0; j < n; j++)
           {
                printf("%d ", matriz[i][j].state);
           }
           puts("");
      }
 }
-void setUp(int size, Cell matriz[10][10], Player player)
-{
 
-     for (int i = 0; i < size; i++)
-     {
-          for (int j = 0; j < size; j++)
-          {
-               matriz[i][j] = *newCell();
-          }
-     }
-
-     for (int i = 0; i < 5; i++)
-     {
-          for (int j = 0; j < player.myShips[i].amount; j++)
-          {
-               if (player.myShips[i].index == 1)
-               {
-                    // desenhando o T
-
-                    if (player.myShips[i].rotate == 0)
-                    {
-
-                         int aux = 0;
-                         for (int col = player.myShips[i].gravity_point_col; col < (player.myShips[i].gravity_point_col + 3); col++)
-                         {
-                              aux++;
-                              Ship *barco = newShip(1);
-                              int row = player.myShips[i].gravity_point_row;
-                              if (row < 10 && col < 10)
-                              {
-                                   updateCell(&matriz[row][col], 1, barco);
-                              }
-                              if (row > 0 && col > 0)
-                              {
-
-                                   Ship *barco = newShip(1);
-
-                                   updateCell(&matriz[row][col - aux], 1, barco);
-                              }
-                         }
-
-                         for (int row = player.myShips[i].gravity_point_row; row < (player.myShips[i].gravity_point_row + 3); row++)
-                         {
-
-                              int col = player.myShips[i].gravity_point_col;
-                              if (row < 10 && col < 10)
-                              {
-                                   Ship *barco = newShip(1);
-
-                                   updateCell(&matriz[row][col], 1, barco);
-                              }
-                         }
-                    }
-                    if (player.myShips[i].rotate == 90)
-                    {
-                         for (int row = player.myShips[i].gravity_point_row; row < (player.myShips[i].gravity_point_row + 3); row++)
-                         {
-
-                              int col = player.myShips[i].gravity_point_col;
-                              if (row < 10 && col < 10)
-                              {
-                                   Ship *barco = newShip(1);
-
-                                   updateCell(&matriz[row][col], 1, barco);
-                              }
-                         }
-
-                         for (int col = player.myShips[i].gravity_point_col - 3; col < (player.myShips[i].gravity_point_col); col++)
-                         {
-
-                              Ship *barco = newShip(1);
-                              int row = player.myShips[i].gravity_point_row;
-                              if (row < 10 && col < 10)
-                              {
-                                   updateCell(&matriz[row + 1][col], 1, barco);
-                              }
-                         }
-                    }
-
-                    if (player.myShips[i].rotate == 180)
-                    {
-                         for (int row = player.myShips[i].gravity_point_row; row < (player.myShips[i].gravity_point_row + 3); row++)
-                         {
-
-                              int col = player.myShips[i].gravity_point_col;
-                              if (row < 10 && col < 10)
-                              {
-                                   Ship *barco = newShip(1);
-
-                                   updateCell(&matriz[row][col], 1, barco);
-                              }
-                         }
-
-                         int aux = 0;
-                         for (int col = player.myShips[i].gravity_point_col; col < (player.myShips[i].gravity_point_col + 3); col++)
-                         {
-                              aux++;
-                              Ship *barco = newShip(1);
-                              int row = player.myShips[i].gravity_point_row;
-                              if (row < 10 && col < 10)
-                              {
-                                   updateCell(&matriz[row + 2][col], 1, barco);
-                              }
-                              if (row > 0 && col > 0)
-                              {
-
-                                   Ship *barco = newShip(1);
-
-                                   updateCell(&matriz[row + 2][col - aux], 1, barco);
-                              }
-                         }
-                    }
-                    if (player.myShips[i].rotate == 270)
-                    {
-                         for (int row = player.myShips[i].gravity_point_row; row < (player.myShips[i].gravity_point_row + 3); row++)
-                         {
-                              Ship *barco = newShip(1);
-                              int col = player.myShips[i].gravity_point_col;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row][col], 1, barco);
-                         }
-
-                         for (int col = player.myShips[i].gravity_point_col; col < (player.myShips[i].gravity_point_col + 3); col++)
-                         {
-                              Ship *barco = newShip(1);
-                              int row = player.myShips[i].gravity_point_row;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row + 1][col + 1], 1, barco);
-                         }
-                    }
-               }
-
-               if (player.myShips[i].index == 2)
-               {
-                    if (player.myShips[i].rotate == 0)
-                    {
-                         for (int row = player.myShips[i].gravity_point_row; row < (player.myShips[i].gravity_point_row + 3); row++)
-                         {
-                              Ship *barco = newShip(1);
-                              int col = player.myShips[i].gravity_point_col;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row][col], 1, barco);
-                         }
-
-                         for (int col = player.myShips[i].gravity_point_col; col < (player.myShips[i].gravity_point_col + 2); col++)
-                         {
-                              Ship *barco = newShip(1);
-                              int row = player.myShips[i].gravity_point_row;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row + 2][col + 1], 1, barco);
-                         }
-                    }
-                    if (player.myShips[i].rotate == 90)
-                    {
-                         for (int col = player.myShips[i].gravity_point_col; col < (player.myShips[i].gravity_point_col + 3); col++)
-                         {
-                              Ship *barco = newShip(1);
-                              int row = player.myShips[i].gravity_point_row;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row][col], 1, barco);
-                         }
-
-                         for (int row = player.myShips[i].gravity_point_row; row < (player.myShips[i].gravity_point_row + 3); row++)
-                         {
-                              Ship *barco = newShip(1);
-                              int col = player.myShips[i].gravity_point_col;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row][col], 1, barco);
-                         }
-                    }
-                    if (player.myShips[i].rotate == 180)
-                    {
-                         for (int col = player.myShips[i].gravity_point_col; col < (player.myShips[i].gravity_point_col + 3); col++)
-                         {
-                              Ship *barco = newShip(1);
-                              int row = player.myShips[i].gravity_point_row;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row + 2][col], 1, barco);
-                         }
-                         for (int row = player.myShips[i].gravity_point_row; row < (player.myShips[i].gravity_point_row + 3); row++)
-                         {
-                              Ship *barco = newShip(1);
-                              int col = player.myShips[i].gravity_point_col;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row][col + 2], 1, barco);
-                         }
-                    }
-                    if (player.myShips[i].rotate == 270)
-                    {
-                         for (int col = player.myShips[i].gravity_point_col; col < (player.myShips[i].gravity_point_col + 3); col++)
-                         {
-                              Ship *barco = newShip(1);
-                              int row = player.myShips[i].gravity_point_row;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row + 2][col], 1, barco);
-                         }
-                         for (int row = player.myShips[i].gravity_point_row; row < (player.myShips[i].gravity_point_row + 3); row++)
-                         {
-                              Ship *barco = newShip(1);
-                              int col = player.myShips[i].gravity_point_col;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row][col], 1, barco);
-                         }
-                    }
-               }
-
-               if (player.myShips[i].index == 3)
-               {
-                    if (player.myShips[i].rotate == 0 || player.myShips[i].rotate == 180)
-                    {
-                         for (int row = player.myShips[i].gravity_point_row; row < (player.myShips[i].gravity_point_row + 5); row++)
-                         {
-                              Ship *barco = newShip(1);
-                              int col = player.myShips[i].gravity_point_col;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row][col], 1, barco);
-                         }
-                    }
-                    if (player.myShips[i].rotate == 270 || player.myShips[i].rotate == 90)
-                    {
-                         for (int col = player.myShips[i].gravity_point_col; col < (player.myShips[i].gravity_point_col + 5); col++)
-                         {
-                              Ship *barco = newShip(1);
-                              int row = player.myShips[i].gravity_point_col;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row][col], 1, barco);
-                         }
-                    }
-               }
-
-               if (player.myShips[i].index == 4)
-               {
-                    if (player.myShips[i].rotate == 0)
-                    {
-                         for (int col = player.myShips[i].gravity_point_col; col > (player.myShips[i].gravity_point_col - 3); col--)
-                         {
-                              Ship *barco = newShip(1);
-                              int row = player.myShips[i].gravity_point_row;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row + 2][col + 1], 1, barco);
-                         }
-                         int col = player.myShips[i].gravity_point_col;
-
-                         for (int row = player.myShips[i].gravity_point_row; row < (player.myShips[i].gravity_point_row + 3); row++)
-                         {
-                              Ship *barco = newShip(1);
-
-                              if (row < 10 && col < 10)
-                              {
-                                   updateCell(&matriz[row][col], 1, barco);
-                                   col--;
-                              }
-                         }
-
-                         for (int col = player.myShips[i].gravity_point_col; col > (player.myShips[i].gravity_point_col - 4); col--)
-                         {
-
-                              Ship *barco = newShip(1);
-                              int row = player.myShips[i].gravity_point_row;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row - 1][col + 1], 1, barco);
-                         }
-                    }
-
-                    if (player.myShips[i].rotate == 90)
-                    {
-                         for (int row = player.myShips[i].gravity_point_row; row < (player.myShips[i].gravity_point_row + 3); row++)
-                         {
-
-                              Ship *barco = newShip(1);
-                              int col = player.myShips[i].gravity_point_row;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row - 1][col], 1, barco);
-                         }
-                         int aux = 0;
-                         for (int row = player.myShips[i].gravity_point_row; row < (player.myShips[i].gravity_point_row + 3); row++)
-                         {
-
-                              Ship *barco = newShip(1);
-                              int col = player.myShips[i].gravity_point_row;
-
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row - 1][col + aux], 1, barco);
-                              aux++;
-                         }
-                         for (int row = player.myShips[i].gravity_point_row; row < (player.myShips[i].gravity_point_row + 3); row++)
-                         {
-
-                              Ship *barco = newShip(1);
-                              int col = player.myShips[i].gravity_point_row;
-                              if (row < 10 && col < 10)
-                                   updateCell(&matriz[row - 1][col + 3], 1, barco);
-                         }
-                    }
-                    if (player.myShips[i].rotate == 180)
-                    {
-                    }
-               }
-          }
-     }
-     printMatriz(matriz);
-}
 
 void initializeMatriz(Player *player, int size)
 {
@@ -394,7 +93,7 @@ void putSingleShip(Player *player, int index)
 {
      if (index == 0)
      {
-          Ship *barco = newShip(1);
+          Ship *barco = newShip(1,5);
           int row = player->myShips[index].gravity_point_row;
           int col = player->myShips[index].gravity_point_col;
           //desenhar o T
@@ -452,7 +151,7 @@ void putSingleShip(Player *player, int index)
      if (index == 1)
      {
           //desenhando o l
-          Ship *barco = newShip(1);
+          Ship *barco = newShip(1,5);
           int row = player->myShips[index].gravity_point_row;
           int col = player->myShips[index].gravity_point_col;
           int aux = 0;
@@ -508,7 +207,7 @@ void putSingleShip(Player *player, int index)
      if (index == 2)
      {
           //desenhando o I
-          Ship *barco = newShip(1);
+          Ship *barco = newShip(1,3);
           int row = player->myShips[index].gravity_point_row;
           int col = player->myShips[index].gravity_point_col;
           int aux = 0;
@@ -545,7 +244,7 @@ void putSingleShip(Player *player, int index)
      if (index == 3)
      {
           //desenhando o Z
-          Ship *barco = newShip(1);
+          Ship *barco = newShip(1,7);
           int row = player->myShips[index].gravity_point_row;
           int col = player->myShips[index].gravity_point_col;
           int aux = 0;
@@ -603,21 +302,21 @@ void putSingleShip(Player *player, int index)
           }
      }
 }
-void print(Player *player)
+void print(Player *player, int size)
 {
      printf(RED);
      printf("  -");
-     for (int i = 0; i < 10; i++)
+     for (int i = 0; i < size; i++)
      {
           printf("%d--", i);
      }
      puts("");
-     for (int i = 0; i < 10; i++)
+     for (int i = 0; i < size; i++)
      {
           printf(RED);
           printf("%d ", i);
           printf(RESET);
-          for (int j = 0; j < 10; j++)
+          for (int j = 0; j < size; j++)
           {
                if (player->matriz[i][j].state == 1)
                {
@@ -647,9 +346,8 @@ int shipSank(Ship *ship)
      return 0;
 }
 
-void print_table(Player *player, int flag)
+void print_table(Player *player, int flag, int SIZE)
 {
-     int SIZE = 10; // temporario
      printf("Os seus barcos\n");
      for (int i = 0; i < SIZE; i++)
      {
@@ -658,49 +356,67 @@ void print_table(Player *player, int flag)
                switch (player->matriz[i][j].state)
                {
                case 0:
+                    printf(BLUE);
                     printf(" ~ ");
                     break;
 
                case 1:
+                    printf(BOLDMAGENTA);
                     printf(" # ");
                     break;
 
                case 2:
+                    printf(RED);
                     printf(" X ");
                     break;
 
                case 3:
+                    printf(YELLOW);
                     printf(" O ");
                     break;
                }
           }
+          printf(RESET);
           printf("\n");
      }
 
      printf("Os seus disparos\n");
      for (int i = 0; i < SIZE; i++)
      {
+          printf("%d-- ", i);
+     }
+     puts("");
+
+     for (int i = 0; i < SIZE; i++)
+     {
+          printf("%d  ", i);
+
           for (int j = 0; j < SIZE; j++)
           {
                switch (player->matriz[i][j].shotState)
                {
                case 0:
+                    printf(BLUE);
                     printf(" ~ ");
                     break;
 
                case 1:
+                    printf(BOLDMAGENTA);
                     printf(" # ");
                     break;
 
                case 2:
+                    printf(RED);
                     printf(" X ");
                     break;
 
                case 3:
+                    printf(YELLOW);
                     printf(" O ");
                     break;
                }
           }
+          printf(RESET);
           printf("\n");
      }
      if (flag)

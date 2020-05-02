@@ -52,7 +52,7 @@ typedef struct Player
   int activeShips;
   char *name;
   Node *myShips;
-  Cell matriz[10][10];
+  Cell matriz[40][40];
 } Player;
 
 void chooseShips(Player *player);
@@ -62,16 +62,16 @@ Cell *newCell();
 int isFree(Cell *);
 void shotCell(Cell *);
 void decreaseActiveCell(Ship *);
-Ship *newShip(int);
-void setUp(int size, Cell matriz[10][10], Player Player);
+Ship *newShip(int type, int n);
+void setUp(int size, Cell matriz[40][40], Player Player);
 void putSingleShip(Player *Player, int index);
 void initializeMatriz(Player *Player, int size);
-void print(Player *player);
+void print(Player *player, int size);
 
 void startGame(Player *p1, Player *p2);
 
 void updateCellShort(Cell *cell, int state);
 int shipSank(Ship *ship);
-void print_table(Player *player, int flag);
+void print_table(Player *player, int flag, int SIZE);
 void changePlayer();
 int ScanAndShot(Player *source_player, Player *target_player);
