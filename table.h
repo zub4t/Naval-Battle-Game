@@ -57,7 +57,7 @@ typedef struct shipPlayer{
      Player palyer;
 }shipPlayer;
 
-void chooseShips(Player *player);
+void chooseShips(Player *player,int random);
 
 void updateCell(Cell *, int, Ship *);
 Cell *newCell();
@@ -77,3 +77,4 @@ int shipSank(Ship *ship);
 void print_table(Player *player, int flag, int SIZE);
 void changePlayer();
 int ScanAndShot(Player *source_player, Player *target_player);
+int randomN(int min, int max);

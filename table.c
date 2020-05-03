@@ -76,7 +76,6 @@ void printMatriz(Cell matriz[40][40], int n)
      }
 }
 
-
 void initializeMatriz(Player *player, int size)
 {
 
@@ -92,7 +91,7 @@ void putSingleShip(Player *player, int index)
 {
      if (index == 0)
      {
-          Ship *barco = newShip(1,5);
+          Ship *barco = newShip(1, 5);
           player->activeShips++;
           int row = player->myShips[index].gravity_point_row;
           int col = player->myShips[index].gravity_point_col;
@@ -151,7 +150,7 @@ void putSingleShip(Player *player, int index)
      if (index == 1)
      {
           //desenhando o l
-          Ship *barco = newShip(1,5);
+          Ship *barco = newShip(1, 5);
           player->activeShips++;
 
           int row = player->myShips[index].gravity_point_row;
@@ -209,7 +208,7 @@ void putSingleShip(Player *player, int index)
      if (index == 2)
      {
           //desenhando o I
-          Ship *barco = newShip(1,3);
+          Ship *barco = newShip(1, 3);
           player->activeShips++;
 
           int row = player->myShips[index].gravity_point_row;
@@ -248,7 +247,7 @@ void putSingleShip(Player *player, int index)
      if (index == 3)
      {
           //desenhando o Z
-          Ship *barco = newShip(1,7);
+          Ship *barco = newShip(1, 7);
           player->activeShips++;
 
           int row = player->myShips[index].gravity_point_row;
@@ -314,19 +313,19 @@ void print(Player *player, int size)
      printf("   -");
      for (int i = 0; i < size; i++)
      {
-          if(i >= 10)
-          printf("%d-", i);
+          if (i >= 10)
+               printf("%d-", i);
           else
-          printf("%d--", i);
+               printf("%d--", i);
      }
      puts("\n");
      for (int i = 0; i < size; i++)
      {
           printf(RED);
-          if(i < 10)
-          printf("%d  ", i);
+          if (i < 10)
+               printf("%d  ", i);
           else
-          printf("%d ", i);
+               printf("%d ", i);
           printf(RESET);
           for (int j = 0; j < size; j++)
           {
@@ -360,7 +359,7 @@ int shipSank(Ship *ship)
 
 void print_table(Player *player, int flag, int SIZE)
 {
-     printf(" Tem %d barcos que ainda não foram destruidos\n",player-> activeShips);
+     printf(" Tem %d barcos que ainda não foram destruidos\n", player->activeShips);
 
      printf("Os seus barcos\n");
      for (int i = 0; i < SIZE; i++)
@@ -399,20 +398,20 @@ void print_table(Player *player, int flag, int SIZE)
      printf("    ");
      for (int i = 0; i < SIZE; i++)
      {
-          if(i >= 10)
-          printf("%d ", i);
+          if (i >= 10)
+               printf("%d ", i);
           else
-          printf("%d  ", i);
+               printf("%d  ", i);
      }
      puts("\n");
 
      for (int i = 0; i < SIZE; i++)
      {
           printf(RED);
-          if(i < 10)
-          printf("%d  ", i);
+          if (i < 10)
+               printf("%d  ", i);
           else
-          printf("%d ", i);
+               printf("%d ", i);
           printf(RESET);
 
           for (int j = 0; j < SIZE; j++)
@@ -513,4 +512,11 @@ int ScanAndShot(Player *source_player, Player *target_player)
      }
 
      return 0;
+}
+int randomN(int lower, int upper)
+{
+
+     return (rand() %
+             (upper - lower + 1)) +
+            lower;
 }

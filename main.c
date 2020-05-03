@@ -14,17 +14,21 @@ int main()
      printf("                                            |_|               \n");
      printf("\033[0m");
      puts("Escolha o tamanho do tabuleiro 20-40");
-
      scanf("%d", &size);
+     puts("Criar barcos aleatorios ? 1/0");
+
+     int random;
+     scanf("%d", &random);
+     printf("%d r valor \n", random);
      //  ------------- teste ----------------
      Player p1 = {0, 0, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100)};
      Player p2 = {0, 0, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100)};
      puts("primeiro jogador escolhendo navios");
      initializeMatriz(&p1, size);
-     chooseShips(&p1);
+     chooseShips(&p1, random);
      puts("segundo  jogador escolhendo navios");
      initializeMatriz(&p2, size);
-     chooseShips(&p2);
+     chooseShips(&p2, random);
      startGame(&p1, &p2);
 
      return 0;
@@ -34,9 +38,9 @@ void startGame(Player *p1, Player *p2)
 {
      while (1)
      {
-          system("clear");
+          // system("clear");
           changePlayer();
-          system("clear");
+          //system("clear");
 
           //enter para aparecer tabelas player 1
           // print board barcos player 1 e tiros player 1
@@ -69,7 +73,7 @@ void startGame(Player *p1, Player *p2)
           { //target
                return;
           }
-          //system("clear");
+          system("clear");
 
           //clear
           //printfeedback
@@ -81,8 +85,9 @@ void startGame(Player *p1, Player *p2)
      }
 }
 
-void chooseShips(Player *player)
+void chooseShips(Player *player, int random)
 {
+
      int amount = 0, n_ships = 0, total_ships = 0;
      n_ships = 4;
 
@@ -113,10 +118,22 @@ void chooseShips(Player *player)
           }
           puts("escolha a quantidade de barcos desse tipo");
           int test = 0;
+
           do
           {
-               scanf("%d", &n_ships_type);
-               if (n_ships_type < 0 || (n_ships_type + (total_ships)) < ((size * size) / 25) && (n_ships_type > ((size * size) / 25) - 4 + i))
+
+               if (random)
+               {
+                    n_ships_type = randomN(1, 3);
+                    printf("quandtidade de barcos %d\n", n_ships_type);
+               }
+               else
+               {
+                    test = 0;
+                    scanf("%d", &n_ships_type);
+               }
+
+               if (n_ships_type <= 0 || (n_ships_type + (total_ships)) < ((size * size) / 25) && (n_ships_type > ((size * size) / 25) - 4 + i))
                {
                     puts("numero de barcos invalido, ou foi menor que zero ou excedeu número maximo de barcos");
                     test = 1;
@@ -135,9 +152,21 @@ void chooseShips(Player *player)
                int flag = 0;
                do
                {
-                    printf("Defina a linha e coluna para colocar o barco de nº %d ex: X Y \n ", i);
-                    scanf("%d", &row);
-                    scanf("%d", &col);
+                    if (random)
+                    {
+                         row = randomN(0, size - 1);
+                         col = randomN(0, size - 1);
+                         printf("%d linha \n ", row);
+                         printf("%d coluna \n", col);
+                    }
+                    else
+                    {
+                         printf("Defina a linha e coluna para colocar o barco de nº %d ex: X Y \n ", i);
+
+                         scanf("%d", &row);
+                         scanf("%d", &col);
+                    }
+
                     flag = 0;
                     for (int i = row; i < row + 3; i++)
                     {
@@ -153,9 +182,18 @@ void chooseShips(Player *player)
                     }
                     if (flag == 0)
                     {
-                         puts("Defina a rotação do barco");
+                         if (random)
+                         {
+                              rotate = randomN(0, 3) * 90;
+                              printf("%d rotate \n", rotate);
+                         }
+                         else
+                         {
+                              puts("Defina a rotação do barco");
 
-                         scanf("%d", &rotate);
+                              scanf("%d", &rotate);
+                         }
+
                          switch (i)
                          {
                          case 0:
@@ -395,6 +433,7 @@ void chooseShips(Player *player)
                player->myShips[i].amount = amount;
                player->myShips[i].index = i;
                putSingleShip(player, i);
+               printf("numero de barcos %d\n", player->activeShips);
 
                print(player, size);
           }
