@@ -17,8 +17,8 @@ int main()
 
      scanf("%d", &size);
      //  ------------- teste ----------------
-     Player p1 = {0, 5, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100)};
-     Player p2 = {0, 5, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100)};
+     Player p1 = {0, 0, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100)};
+     Player p2 = {0, 0, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100)};
      puts("primeiro jogador escolhendo navios");
      initializeMatriz(&p1, size);
      chooseShips(&p1);
@@ -118,7 +118,7 @@ void chooseShips(Player *player)
                scanf("%d", &n_ships_type);
                if (n_ships_type < 0 || (n_ships_type + (total_ships)) < ((size * size) / 25) && (n_ships_type > ((size * size) / 25) - 4 + i))
                {
-                    puts("numero de barcos invalido, ou foi menor que zero ou excedeu número maximo de barcos")
+                    puts("numero de barcos invalido, ou foi menor que zero ou excedeu número maximo de barcos");
                     test = 1;
                }
           } while (test);

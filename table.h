@@ -16,10 +16,6 @@
 #define BOLDCYAN "\033[1m\033[36m"    /* Bold Cyan */
 #define BOLDWHITE "\033[1m\033[37m"   /* Bold White */
 
-// typedef struct Player
-// {
-//  //vai ter de ser criada
-// } Player;
 
 typedef struct Ship
 {
@@ -54,6 +50,12 @@ typedef struct Player
   Node *myShips;
   Cell matriz[40][40];
 } Player;
+
+typedef struct shipPlayer{
+
+     Ship ship;
+     Player palyer;
+}shipPlayer;
 
 void chooseShips(Player *player);
 

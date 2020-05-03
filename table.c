@@ -62,7 +62,6 @@ Ship *newShip(int type, int n)
      Ship *ship = malloc(sizeof(Ship));
      ship->type = type;
      ship->ActiveCells = n; // missing a function to calculate the total
-                            //amount of cells of a ship
      return ship;
 }
 void printMatriz(Cell matriz[40][40], int n)
@@ -94,6 +93,7 @@ void putSingleShip(Player *player, int index)
      if (index == 0)
      {
           Ship *barco = newShip(1,5);
+          player->activeShips++;
           int row = player->myShips[index].gravity_point_row;
           int col = player->myShips[index].gravity_point_col;
           //desenhar o T
@@ -152,6 +152,8 @@ void putSingleShip(Player *player, int index)
      {
           //desenhando o l
           Ship *barco = newShip(1,5);
+          player->activeShips++;
+
           int row = player->myShips[index].gravity_point_row;
           int col = player->myShips[index].gravity_point_col;
           int aux = 0;
@@ -208,6 +210,8 @@ void putSingleShip(Player *player, int index)
      {
           //desenhando o I
           Ship *barco = newShip(1,3);
+          player->activeShips++;
+
           int row = player->myShips[index].gravity_point_row;
           int col = player->myShips[index].gravity_point_col;
           int aux = 0;
@@ -245,6 +249,8 @@ void putSingleShip(Player *player, int index)
      {
           //desenhando o Z
           Ship *barco = newShip(1,7);
+          player->activeShips++;
+
           int row = player->myShips[index].gravity_point_row;
           int col = player->myShips[index].gravity_point_col;
           int aux = 0;
@@ -348,6 +354,8 @@ int shipSank(Ship *ship)
 
 void print_table(Player *player, int flag, int SIZE)
 {
+     printf(" Tem %d barcos que ainda não foram destruidos\n",player-> activeShips);
+
      printf("Os seus barcos\n");
      for (int i = 0; i < SIZE; i++)
      {
