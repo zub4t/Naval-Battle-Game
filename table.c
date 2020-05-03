@@ -311,15 +311,21 @@ void putSingleShip(Player *player, int index)
 void print(Player *player, int size)
 {
      printf(RED);
-     printf("  -");
+     printf("   -");
      for (int i = 0; i < size; i++)
      {
+          if(i >= 10)
+          printf("%d-", i);
+          else
           printf("%d--", i);
      }
-     puts("");
+     puts("\n");
      for (int i = 0; i < size; i++)
      {
           printf(RED);
+          if(i < 10)
+          printf("%d  ", i);
+          else
           printf("%d ", i);
           printf(RESET);
           for (int j = 0; j < size; j++)
@@ -364,7 +370,7 @@ void print_table(Player *player, int flag, int SIZE)
                switch (player->matriz[i][j].state)
                {
                case 0:
-                    printf(BLUE);
+                    printf(BOLDBLUE);
                     printf(" ~ ");
                     break;
 
@@ -374,12 +380,12 @@ void print_table(Player *player, int flag, int SIZE)
                     break;
 
                case 2:
-                    printf(RED);
+                    printf(BOLDRED);
                     printf(" X ");
                     break;
 
                case 3:
-                    printf(YELLOW);
+                    printf(BOLDYELLOW);
                     printf(" O ");
                     break;
                }
@@ -389,22 +395,32 @@ void print_table(Player *player, int flag, int SIZE)
      }
 
      printf("Os seus disparos\n");
+     printf(RED);
+     printf("    ");
      for (int i = 0; i < SIZE; i++)
      {
-          printf("%d-- ", i);
+          if(i >= 10)
+          printf("%d ", i);
+          else
+          printf("%d  ", i);
      }
-     puts("");
+     puts("\n");
 
      for (int i = 0; i < SIZE; i++)
      {
+          printf(RED);
+          if(i < 10)
           printf("%d  ", i);
+          else
+          printf("%d ", i);
+          printf(RESET);
 
           for (int j = 0; j < SIZE; j++)
           {
                switch (player->matriz[i][j].shotState)
                {
                case 0:
-                    printf(BLUE);
+                    printf(BOLDBLUE);
                     printf(" ~ ");
                     break;
 
@@ -414,12 +430,12 @@ void print_table(Player *player, int flag, int SIZE)
                     break;
 
                case 2:
-                    printf(RED);
+                    printf(BOLDRED);
                     printf(" X ");
                     break;
 
                case 3:
-                    printf(YELLOW);
+                    printf(BOLDYELLOW);
                     printf(" O ");
                     break;
                }
