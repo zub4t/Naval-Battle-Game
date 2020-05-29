@@ -10,7 +10,7 @@ enum State
      MISSED_SHOT
 };
 
-void updateCell(Cell *cell, int state, Ship *bellongsTo)
+void updateCell(Cell *cell, int state, Ship bellongsTo)
 {
      cell->state = state;
      cell->bellongsTo = bellongsTo;
@@ -21,7 +21,6 @@ Cell *newCell()
      Cell *cell = malloc(sizeof(cell));
      cell->state = 0;
      cell->shotState = 0;
-     cell->bellongsTo = NULL;
      return cell;
 }
 
@@ -57,11 +56,9 @@ void decreaseActiveCell(Ship *ship)
      }
 }
 
-Ship *newShip(int type, int n)
+Ship newShip(int type, int n)
 {
-     Ship *ship = malloc(sizeof(Ship));
-     ship->type = type;
-     ship->ActiveCells = n; // missing a function to calculate the total
+     Ship ship = {type,n};
      return ship;
 }
 void printMatriz(Cell matriz[40][40], int n)
@@ -90,8 +87,8 @@ void initializeMatriz(Player *player, int size)
 void putSingleShip(Player *player, int index)
 {
      if (index == 0)
-     {
-          Ship *barco = newShip(1, 5);
+     {      player->total_pieces+=5;
+          Ship barco = newShip(1, 5);
           player->activeShips++;
           int row = player->myShips[index].gravity_point_row;
           int col = player->myShips[index].gravity_point_col;
@@ -148,9 +145,9 @@ void putSingleShip(Player *player, int index)
           }
      }
      if (index == 1)
-     {
+     {      player->total_pieces+=5;
           //desenhando o l
-          Ship *barco = newShip(1, 5);
+          Ship barco = newShip(1, 5);
           player->activeShips++;
 
           int row = player->myShips[index].gravity_point_row;
@@ -206,9 +203,9 @@ void putSingleShip(Player *player, int index)
           }
      }
      if (index == 2)
-     {
+     {      player->total_pieces+=3;
           //desenhando o I
-          Ship *barco = newShip(1, 3);
+          Ship barco = newShip(1, 3);
           player->activeShips++;
 
           int row = player->myShips[index].gravity_point_row;
@@ -245,9 +242,9 @@ void putSingleShip(Player *player, int index)
           }
      }
      if (index == 3)
-     {
+     {      player->total_pieces+=8;
           //desenhando o Z
-          Ship *barco = newShip(1, 7);
+          Ship barco = newShip(1, 7);
           player->activeShips++;
 
           int row = player->myShips[index].gravity_point_row;
@@ -348,9 +345,9 @@ void updateCellShort(Cell *cell, int state)
 {
      cell->state = state;
 }
-int shipSank(Ship *ship)
+int shipSank(Ship ship)
 {
-     if (ship->ActiveCells == 0)
+     if (ship.ActiveCells == 0)
      {
           return 1;
      }
@@ -470,14 +467,17 @@ void changePlayer()
 
 int ScanAndShot(Player *source_player, Player *target_player)
 {
-     int x, y;
+     int x=0, y=0;
      while (1)
      {
           printf("escolha o alvo dos seus disparos.\n");
           scanf("%d", &x);
           scanf("%d", &y); // cornfirmar se esta no range
+
+          
           if (target_player->matriz[x][y].state == EMPTY)
           {
+               puts("atualizando tiro");
                updateCellShort(&target_player->matriz[x][y], MISSED_SHOT);
                source_player->matriz[x][y].shotState = MISSED_SHOT;
                system("clear");
@@ -488,23 +488,20 @@ int ScanAndShot(Player *source_player, Player *target_player)
           }
           else if (target_player->matriz[x][y].state == PIECE)
           {
+               puts("tiro confirmado");
                updateCellShort(&target_player->matriz[x][y], PIECE_HITTED);
                source_player->matriz[x][y].shotState = PIECE_HITTED;
-               target_player->matriz[x][y].bellongsTo->ActiveCells--;
+               target_player->matriz[x][y].bellongsTo.ActiveCells--;
                system("clear");
                puts("Barco atingido!");
-               if (shipSank(target_player->matriz[x][y].bellongsTo))
-               {
-                    target_player->activeShips--;
-                    puts("Barco afundado!");
-               }
-               if (target_player->activeShips == 0)
+               target_player->total_pieces--;
+               if (target_player->total_pieces== 0)
                {
                     puts("Venceu o jogo!");
                     //flag para acabar o jogo
                     return 1;
                }
-
+          
                return 0;
           }
 
@@ -519,4 +516,21 @@ int randomN(int lower, int upper)
      return (rand() %
              (upper - lower + 1)) +
             lower;
+}
+void write_conf(char *name,Player *p){
+
+     FILE *f = fopen(name, "w+");
+     if (f == NULL)
+     {
+     printf("Error opening file!\n");
+ 
+     }
+     fprintf(f, " {'nome' : '%s'}", p->name);
+     fprintf(f, " {'nome' : '%s'}", p->name);
+     fprintf(f, " {'nome' : '%s'}", p->name);
+
+
+     fclose(f);
+
+
 }

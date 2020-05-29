@@ -1,10 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "table.h"
+
+
+#include<sys/ipc.h>
+#include<sys/shm.h>
+#include<sys/types.h>
+#include<errno.h>
+#include<unistd.h>
+#include<string.h>
+#include<time.h> 
 int size = 0;
+Player *pShared;
+Player *p1_shared;
+Player *p2_shared;
+
 int main()
 {
 
+
+     srand(time(0));
      printf("\033[01;33m"); // bold yellow
      printf("     ____        _   _   _           _     _                  \n");
      printf("    | __ )  __ _| |_| |_| | ___  ___| |__ (_)_ __             \n");
@@ -18,71 +33,90 @@ int main()
      puts("Criar barcos aleatorios ? 1/0");
 
      int random;
+
      scanf("%d", &random);
      printf("%d r valor \n", random);
      //  ------------- teste ----------------
-     Player p1 = {0, 0, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100)};
-     Player p2 = {0, 0, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100)};
+     Player p2 = {0, 0, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100),0};
+     puts("digite Seu nome");
+     scanf("%s",p2.name);
      puts("primeiro jogador escolhendo navios");
-     initializeMatriz(&p1, size);
-     chooseShips(&p1, random);
-     puts("segundo  jogador escolhendo navios");
      initializeMatriz(&p2, size);
      chooseShips(&p2, random);
-     startGame(&p1, &p2);
+     const char* path="./p1Config.txt"; 
+     //write_conf(path,&p1);
+     p2.ID_P=2;
+     
+     //compartilhar p2
+     int shmt =writeSharedMemory(p2,0x4567);
+     //iniciar shared players
+     p2_shared=readSharedMemory(0x4567);
+     p1_shared=readSharedMemory(0x1234);
+
+     int aux_p1=0, aux_p2=0;
+     while(! (aux_p1==2 && aux_p2==2)){
+          aux_p1=p1_shared->ID_P;
+          aux_p2=p2_shared->ID_P;
+          if(aux_p1!=2){
+               puts("a espera do jogador 1");
+          }
+          if(aux_p2!=2){
+               puts("a espera do jogador 2");
+          }
+          sleep(3);
+     }
+     printf(RED); 
+     puts("Pronto para iniciar o jogo");
+     printf(RESET);
+     p2_shared->ID_P=0;
+     startGame(p1_shared,p2_shared,shmt);
 
      return 0;
 }
 
-void startGame(Player *p1, Player *p2)
+
+
+
+void startGame(Player *p1, Player *p2,int shmt)
 {
      while (1)
      {
-          // system("clear");
-          changePlayer();
-          //system("clear");
+          if(p2->ID_P==1){
+              
+               puts("dentro p2");
+               sleep(1);
+               //enter para aparecer tabelas player 2
+               //print board barcos player 2 e tiros player 2
+               print_table(p2, 0, size);
 
-          //enter para aparecer tabelas player 1
-          // print board barcos player 1 e tiros player 1
-          print_table(p1, 0, size);
-          // p1 scan target
-          if (ScanAndShot(p1, p2))
-          { //target
-               return;
+               // p2 scan target
+               printf("total peças p2 %d \n",p2->total_pieces);
+               printf("total peças p1 %d \n",p1->total_pieces);
+               if (ScanAndShot(p2, p1))
+               { //target
+                    return;
+               }
+               //clear
+               //printfeedback
+               //print tabelas atualizadas
+
+               print_table(p2, 1, size);
+               system("clear");
+               //enter para desaparecer tabelas player 2
+               p1->ID_P=1;
+               p2->ID_P=0;
+          }else{
+               puts("aguardado vez");
+               sleep(3);
           }
-
-          //clear
-
-          //print feedback
-          // print tabelas atualizadas
-          print_table(p1, 1, size);
-          //enter para desaparecer tabelas player 1
-          system("clear");
-
-          //------------------ proximo jogador -------------------------------
-
-          changePlayer();
-          system("clear");
-
-          //enter para aparecer tabelas player 2
-          //print board barcos player 2 e tiros player 2
-          print_table(p2, 0, size);
-
-          // p2 scan target
-          if (ScanAndShot(p2, p1))
-          { //target
-               return;
-          }
-          system("clear");
-
-          //clear
-          //printfeedback
-          //print tabelas atualizadas
-
-          print_table(p2, 1, size);
-
-          //enter para desaparecer tabelas player 2
      }
+
+  
+     //fechando shared players
+     closeWriteSharedMemory(shmt);
+     closeSharedMemory(p2_shared);
+     closeSharedMemory(p1_shared);
+
 }
 
 void chooseShips(Player *player, int random)

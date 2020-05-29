@@ -27,10 +27,9 @@ typedef struct Ship
 
 typedef struct Cell
 {
-  int state; // 0 = empty, 1 = piece without being hitted,
-             // 2 = piece hitted, 3 = missed shot
+  int state; // 0 = empty, 1 = piece without being hitted,// 2 = piece hitted, 3 = missed shot
   int shotState;
-  Ship *bellongsTo; // if cell is empty bellongsTo is null
+  Ship bellongsTo; // if cell is empty bellongsTo is null
 } Cell;
 typedef struct Node
 {
@@ -48,7 +47,9 @@ typedef struct Player
   int activeShips;
   char *name;
   Node *myShips;
+  int total_pieces;
   Cell matriz[40][40];
+ 
 } Player;
 
 typedef struct shipPlayer{
@@ -58,23 +59,27 @@ typedef struct shipPlayer{
 }shipPlayer;
 
 void chooseShips(Player *player,int random);
-
-void updateCell(Cell *, int, Ship *);
+void updateCell(Cell *, int, Ship);
 Cell *newCell();
 int isFree(Cell *);
 void shotCell(Cell *);
 void decreaseActiveCell(Ship *);
-Ship *newShip(int type, int n);
+Ship newShip(int type, int n);
 void setUp(int size, Cell matriz[40][40], Player Player);
 void putSingleShip(Player *Player, int index);
 void initializeMatriz(Player *Player, int size);
 void print(Player *player, int size);
 
-void startGame(Player *p1, Player *p2);
+void startGame(Player *p1, Player *p2,int shmt);
 
 void updateCellShort(Cell *cell, int state);
-int shipSank(Ship *ship);
+int shipSank(Ship ship);
 void print_table(Player *player, int flag, int SIZE);
 void changePlayer();
 int ScanAndShot(Player *source_player, Player *target_player);
 int randomN(int min, int max);
+void write_conf(char *name, Player *p);
+int writeSharedMemory(Player p , int SHM_KEY);
+Player *readSharedMemory( int SHM_KEY);
+int closeSharedMemory(Player *p);
+int closeWriteSharedMemory(int shmid);
