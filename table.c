@@ -356,7 +356,7 @@ int shipSank(Ship ship)
 
 void print_table(Player *player, int flag, int SIZE)
 {
-     printf(" Tem %d barcos que ainda não foram destruidos\n", player->activeShips);
+     
 
      printf("Os seus barcos\n");
      for (int i = 0; i < SIZE; i++)
@@ -479,8 +479,7 @@ int ScanAndShot(Player *source_player, Player *target_player)
           {
                puts("atualizando tiro");
                updateCellShort(&target_player->matriz[x][y], MISSED_SHOT);
-               source_player->matriz[x][y].shotState = MISSED_SHOT;
-               system("clear");
+               source_player->matriz[x][y].shotState=MISSED_SHOT;
 
                puts("Tiro falhado!");
 
@@ -492,7 +491,6 @@ int ScanAndShot(Player *source_player, Player *target_player)
                updateCellShort(&target_player->matriz[x][y], PIECE_HITTED);
                source_player->matriz[x][y].shotState = PIECE_HITTED;
                target_player->matriz[x][y].bellongsTo.ActiveCells--;
-               system("clear");
                puts("Barco atingido!");
                target_player->total_pieces--;
                if (target_player->total_pieces== 0)
@@ -533,14 +531,8 @@ void write_conf(char *name,Player *p){
           fprintf(f, "-");
      }  
      fprintf(f, "F");
-     for(int i = 0; i<40;i++){
-          for(int j = 0;j<40;j++){
-               int aux = p->matriz[i][j].shotState;
-               fprintf(f, "%d",aux);
-          }
-            fprintf(f, "-");
+     fprintf(f, "%d",p->total_pieces);
 
-     } 
      fclose(f);
 }
 void read_conf(char *name,Player *p){
@@ -566,40 +558,22 @@ void read_conf(char *name,Player *p){
           if( c=='-') {
           //  puts("");
           }else{
-               //printf("%d",c);
+              
                p->matriz[i][j].state=(c-48);
                j++;
 
           }
-       
+         
        
        
      
      } while(1);
-  //   puts("shot State");
-     //shot State
-     i=0;
-     j=0;
-     do {
-          c = fgetc(fp);
-          if(feof(fp)|| i==40) {
-               break ;
-          }
-          if( c=='-') {
-               j=0;
-               i++;
-
-          } 
-          if( c=='-') {
-         //   puts("");
-          }else{
-            //   printf("%d",c);
-               p->matriz[i][j].shotState=(c-48);
-               j++;
-
-          }
-     } while(1);
-
+     char str[3];
+     str[0] = fgetc(fp);
+     str[1]= fgetc(fp);
+     str[2]=  '\0';
+     int total = atoi(str);
+     p->total_pieces= total;
 
      fclose(fp);
 }

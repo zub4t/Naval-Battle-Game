@@ -16,8 +16,8 @@
 int size = 0;
 Player *p2_shared;
 Player *p1_shared;
- char* path_1="./p1Config.txt"; 
-  char* path_2="./p2Config.txt"; 
+char* path_1="./p1Config.txt"; 
+char* path_2="./p2Config.txt"; 
 int main()
 {
 
@@ -61,7 +61,7 @@ int main()
      int random;
 
      scanf("%d", &random);
-     printf("%d r valor \n", random);
+
      //  ------------- teste ----------------
 
      Player p1 = {0, 0, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100)};
@@ -71,64 +71,78 @@ int main()
      initializeMatriz(&p1, size);
      chooseShips(&p1, random);
     
-     
-     
-     
+     int op;
+     puts("digite a forma de comunicação entre terminais que vc  deseja usar \n 1 :  para inter-processcommunication \n 2 : para semaphores");
+      scanf("%d", &op);
    
+     switch (op)
+     {
+     case 1:
 
 
+          p1.ID_P=2;
 
-     write_conf(path_1,&p1);
-     semctl(semaphore_id_controle_p1, 0, SETVAL,1);
-     Player p_para_leitura= {0, 0, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100),0};
-     while(semctl(semaphore_id_controle_p2, 0, GETVAL)!=1){
-          puts("terminar a escrita do p2 para ler");
-          sleep(2);
-     }
 
+          //compartilhando player p1
+          int shmt =writeSharedMemory(p1,0x1234);
+          //iniciando players compartilhados
+          p2_shared=readSharedMemory(0x4567);
+          p1_shared=readSharedMemory(0x1234);
      
-     read_conf(path_2,&p_para_leitura);
-     semctl(semaphore_id, 0, SETVAL,1);
-     startGameNoShared(&p1,&p_para_leitura,semaphore_id);
-     if (semctl (semaphore_id, 0, IPC_RMID) == -1) {
-          puts ("semctl IPC_RMID");
+     
+          int aux_p1=0, aux_p2=0;
+          while(! (aux_p1==2 && aux_p2==2)){
+               aux_p1=p1_shared->ID_P;
+               aux_p2=p2_shared->ID_P;
+               if(aux_p1!=2){
+                    puts("a espera do jogador 1");
+               }
+               if(aux_p2!=2){
+                    puts("a espera do jogador 2");
+               }
+               sleep(3);
+
+          }
+          printf(RED); 
+          puts("Pronto para iniciar o jogo");
+          printf(RESET);
+          p2_shared->ID_P=0;
+          p1_shared->ID_P=1;
+          startGame(p1_shared,p2_shared,shmt);
+    
+
+
+          break;
+
+     case 2:
+
+          write_conf(path_1,&p1);
+          semctl(semaphore_id_controle_p1, 0, SETVAL,1);
+          Player p_para_leitura= {0, 0, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100),0};
+          while(semctl(semaphore_id_controle_p2, 0, GETVAL)!=1){
+               puts("terminar a escrita do p2 para ler");
+               sleep(2);
+          }
+
+          
+          read_conf(path_2,&p_para_leitura);
+          semctl(semaphore_id, 0, SETVAL,1);
+          startGameNoShared(&p1,&p_para_leitura,semaphore_id);
+          if (semctl (semaphore_id, 0, IPC_RMID) == -1) {
+               puts ("semctl IPC_RMID");
+          }
+
+
+
+          break;
      }
 
 
 
 
 
-     p1.ID_P=2;
 
-
-     /*
-     //compartilhando player p1
-     int shmt =writeSharedMemory(p1,0x1234);
-     //iniciando players compartilhados
-     p2_shared=readSharedMemory(0x4567);
-     p1_shared=readSharedMemory(0x1234);
-    
-    
-    int aux_p1=0, aux_p2=0;
-     while(! (aux_p1==2 && aux_p2==2)){
-          aux_p1=p1_shared->ID_P;
-          aux_p2=p2_shared->ID_P;
-          if(aux_p1!=2){
-               puts("a espera do jogador 1");
-          }
-          if(aux_p2!=2){
-               puts("a espera do jogador 2");
-          }
-          sleep(3);
-
-     }
-     printf(RED); 
-     puts("Pronto para iniciar o jogo");
-     printf(RESET);
-     p2_shared->ID_P=0;
-     p1_shared->ID_P=1;
-     startGame(p1_shared,p2_shared,shmt);
-    */
+ 
   
   
 
@@ -139,13 +153,13 @@ int main()
 
 
 void startGameNoShared(Player *p1, Player *p2,int semaphore_id)
-{
+{      int counter = 0;
      semctl(semaphore_id, 0, SETVAL,1);
      while (1)
      {         
           if(semctl(semaphore_id, 0, GETVAL)==1){
                read_conf(path_1,p1);
-               puts("vez de pq");
+               puts("Sua vez de Jogar");
                sleep(1);
                //enter para aparecer tabelas player 2
                //print board barcos player 2 e tiros player 2
@@ -160,13 +174,32 @@ void startGameNoShared(Player *p1, Player *p2,int semaphore_id)
                }
                system("clear");
                write_conf(path_2,p2);
+               write_conf(path_1,p1);
                print_table(p1, 1, size);
                semctl(semaphore_id, 0, SETVAL,2);
 
           }else{
-               puts("no aguardo do p2");
-               printf("%d\n",semctl(semaphore_id, 0, GETVAL));
-                 sleep(3);
+               switch (counter)
+               {
+               case 0:
+               system("clear");
+                  puts("Aguarde sua vez.");
+                  counter++;
+                    break;
+               case 1:
+                system("clear");
+                    puts("Aguarde sua vez..");
+                    counter++;
+                    break;
+               case 2:
+                system("clear");
+                    puts("Aguarde sua vez...");
+                    counter=0;
+                    break;
+          
+               }
+            
+               sleep(1);
           }
 
             
@@ -181,6 +214,7 @@ void startGameNoShared(Player *p1, Player *p2,int semaphore_id)
 
 void startGame(Player *p1, Player *p2,int shmt)
 {
+     int counter = 0 ;
      while (1)
      {
           if(p1->ID_P==1){
@@ -208,8 +242,27 @@ void startGame(Player *p1, Player *p2,int shmt)
                p1->ID_P=0;
                p2->ID_P=1;
           }else{
-               puts("aguardado vez");
-               sleep(3);
+               switch (counter)
+               {
+               case 0:
+               system("clear");
+                  puts("Aguarde sua vez.");
+                  counter++;
+                    break;
+               case 1:
+                system("clear");
+                    puts("Aguarde sua vez..");
+                    counter++;
+                    break;
+               case 2:
+                system("clear");
+                    puts("Aguarde sua vez...");
+                    counter=0;
+                    break;
+          
+               }
+            
+               sleep(1);
           }
          
 
