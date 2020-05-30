@@ -10,13 +10,46 @@
 #include<unistd.h>
 #include<string.h>
 #include<time.h> 
+
+#include			<sys/sem.h>
+
+
 int size = 0;
 Player *pShared;
 Player *p1_shared;
 Player *p2_shared;
-
+ char* path_1="./p1Config.txt"; 
+  char* path_2="./p2Config.txt"; 
 int main()
 {
+
+     //creating a semaphore 
+     int semaphore_id;
+	if ((semaphore_id = semget(1, 1, IPC_CREAT)) == -1) {
+	 		puts("error");
+	 	
+	} 
+    
+     int semaphore_id_controle_p1;
+	if ((semaphore_id_controle_p1 = semget(2, 1, IPC_CREAT)) == -1) {
+	 		puts("error");
+	 	
+	}
+
+     int semaphore_id_controle_p2;
+	if ((semaphore_id_controle_p2 = semget(3, 1, IPC_CREAT)) == -1) {
+	 		puts("error");
+	 	
+	}
+     semctl(semaphore_id_controle_p2, 0, SETVAL,0);
+
+
+
+
+
+
+
+
 
 
      srand(time(0));
@@ -43,10 +76,41 @@ int main()
      puts("primeiro jogador escolhendo navios");
      initializeMatriz(&p2, size);
      chooseShips(&p2, random);
-     const char* path="./p1Config.txt"; 
-     //write_conf(path,&p1);
-     p2.ID_P=2;
+
+
+     // usando semaphores
+
+
+
+
+
+     char* path="./p2Config.txt"; 
+     write_conf(path,&p2);
+     semctl(semaphore_id_controle_p2, 0, SETVAL,1);
+     while(semctl(semaphore_id_controle_p1, 0, GETVAL)!=1){
+          puts("terminar a escrita do p1 para ler");
+          sleep(2);
+     }
+
+
+       
+     Player p_para_leitura= {0, 0, malloc(sizeof(char) * 50), malloc(sizeof(Node) * 100),0};
+
+     read_conf(path_1,&p_para_leitura);
+  
+
      
+     startGameNoShared(&p_para_leitura,&p2,semaphore_id);
+     if (semctl (semaphore_id, 0, IPC_RMID) == -1) {
+          puts ("semctl IPC_RMID");
+     }
+     
+
+
+     p2.ID_P=2;
+
+
+   /* 
      //compartilhar p2
      int shmt =writeSharedMemory(p2,0x4567);
      //iniciar shared players
@@ -70,11 +134,52 @@ int main()
      printf(RESET);
      p2_shared->ID_P=0;
      startGame(p1_shared,p2_shared,shmt);
+*/
+
 
      return 0;
 }
 
 
+void startGameNoShared(Player *p1, Player *p2,int semaphore_id)
+{    semctl(semaphore_id, 0, SETVAL,1);
+     while (1)
+     {         
+          if(semctl(semaphore_id, 0, GETVAL)==2){
+               read_conf(path_2,p2);
+               puts("vez do p2");
+               sleep(1);
+               //enter para aparecer tabelas player 2
+               //print board barcos player 2 e tiros player 2
+               print_table(p2, 0, size);
+
+               // p2 scan target
+               printf("total peças p2 %d \n",p2->total_pieces);
+               printf("total peças p1 %d \n",p1->total_pieces);
+               if (ScanAndShot(p2, p1))
+               { //target
+                    return;
+               }
+               write_conf(path_1,p1);
+               system("clear");
+               print_table(p2, 1, size);
+               semctl(semaphore_id, 0, SETVAL,1);
+
+         
+          }else{
+               puts("no aguardo do p1");
+               sleep(3);
+          }
+
+
+            
+         
+     }
+
+  
+
+
+}
 
 
 void startGame(Player *p1, Player *p2,int shmt)

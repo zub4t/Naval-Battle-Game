@@ -525,12 +525,81 @@ void write_conf(char *name,Player *p){
      printf("Error opening file!\n");
  
      }
-     fprintf(f, " {'nome' : '%s'}", p->name);
-     fprintf(f, " {'nome' : '%s'}", p->name);
-     fprintf(f, " {'nome' : '%s'}", p->name);
+     for(int i = 0; i<40;i++){
+          for(int j = 0;j<40;j++){
+               int aux = p->matriz[i][j].state;
+               fprintf(f, "%d",aux);
+          }
+          fprintf(f, "-");
+     }  
+     fprintf(f, "F");
+     for(int i = 0; i<40;i++){
+          for(int j = 0;j<40;j++){
+               int aux = p->matriz[i][j].shotState;
+               fprintf(f, "%d",aux);
+          }
+            fprintf(f, "-");
 
-
+     } 
      fclose(f);
+}
+void read_conf(char *name,Player *p){
+
+     FILE *fp = fopen(name, "r");
+     if (fp == NULL)
+     {
+          printf("Error opening file!\n");
+     }
+     int c;
+     int n = 0, i= 0, j=0;
+  
+     do {
+          c = fgetc(fp);
+          if( c=='F' || i==40) {
+               break ;
+          }
+          if( c=='-') {
+               j=0;
+               i++;
+
+          }
+          if( c=='-') {
+          //  puts("");
+          }else{
+               //printf("%d",c);
+               p->matriz[i][j].state=(c-48);
+               j++;
+
+          }
+       
+       
+       
+     
+     } while(1);
+  //   puts("shot State");
+     //shot State
+     i=0;
+     j=0;
+     do {
+          c = fgetc(fp);
+          if(feof(fp)|| i==40) {
+               break ;
+          }
+          if( c=='-') {
+               j=0;
+               i++;
+
+          } 
+          if( c=='-') {
+         //   puts("");
+          }else{
+            //   printf("%d",c);
+               p->matriz[i][j].shotState=(c-48);
+               j++;
+
+          }
+     } while(1);
 
 
+     fclose(fp);
 }
