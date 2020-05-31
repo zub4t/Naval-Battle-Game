@@ -131,6 +131,12 @@ int main()
           if (semctl (semaphore_id, 0, IPC_RMID) == -1) {
                puts ("semctl IPC_RMID");
           }
+         if (semctl (semaphore_id_controle_p2, 0, IPC_RMID) == -1) {
+               puts ("semctl IPC_RMID");
+          }
+         if (semctl (semaphore_id_controle_p1, 0, IPC_RMID) == -1) {
+               puts ("semctl IPC_RMID");
+          }
 
 
 

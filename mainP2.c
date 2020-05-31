@@ -117,7 +117,7 @@ int main()
           write_conf(path_2,&p2);
           semctl(semaphore_id_controle_p2, 0, SETVAL,1);
           while(semctl(semaphore_id_controle_p1, 0, GETVAL)!=1){
-               puts("terminar a escrita do p1 para ler");
+               puts("aguardando terminar a escrita do p1 para ler");
                sleep(2);
           }
 
@@ -133,6 +133,15 @@ int main()
           if (semctl (semaphore_id, 0, IPC_RMID) == -1) {
                puts ("semctl IPC_RMID");
           }
+
+         if (semctl (semaphore_id_controle_p2, 0, IPC_RMID) == -1) {
+               puts ("semctl IPC_RMID");
+          }
+         if (semctl (semaphore_id_controle_p1, 0, IPC_RMID) == -1) {
+               puts ("semctl IPC_RMID");
+          }
+
+
      
           break;
      
