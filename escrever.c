@@ -35,6 +35,7 @@ int writeSharedMemory(Player player , int SHM_KEY) {
                 p_teste->matriz[i][j]=player.matriz[i][j];
                 p_teste->matriz[i][j].state = player.matriz[i][j].state;
                 p_teste->matriz[i][j].shotState = player.matriz[i][j].shotState;
+
             }
     }
    //copiando barcos

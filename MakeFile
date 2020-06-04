@@ -1,0 +1,5 @@
+main: mainP1.c mainP2.c 
+	gcc mainP1.c  ./quadtree/src/quadtree.c ./quadtree/src/bounds.c ./quadtree/src/node.c ./quadtree/src/point.c ler.c escrever.c table.c -lm -o mainP1
+	&&
+	gcc mainP2.c  ./quadtree/src/quadtree.c ./quadtree/src/bounds.c ./quadtree/src/node.c ./quadtree/src/point.c ler.c escrever.c table.c -lm -o mainP2
+

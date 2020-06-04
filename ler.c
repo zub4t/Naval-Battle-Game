@@ -12,6 +12,8 @@
 Player* readSharedMemory(int SHM_KEY){
 
    int shmid;
+
+  
    shmid = shmget(SHM_KEY, sizeof(struct Player),IPC_CREAT);
    if (shmid == -1) {
       perror("Shared memory");

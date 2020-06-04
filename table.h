@@ -15,7 +15,7 @@
 #define BOLDMAGENTA "\033[1m\033[35m" /* Bold Magenta */
 #define BOLDCYAN "\033[1m\033[36m"    /* Bold Cyan */
 #define BOLDWHITE "\033[1m\033[37m"   /* Bold White */
-
+#include "./quadtree/src/quadtree.h"
 
 typedef struct Ship
 {
@@ -49,16 +49,18 @@ typedef struct Player
   Node *myShips;
   int total_pieces;
   Cell matriz[40][40];
- 
+  quadtree_t *tree ;
+
 } Player;
 
-typedef struct shipPlayer{
+typedef struct shipPlayer
+{
 
-     Ship ship;
-     Player palyer;
-}shipPlayer;
+  Ship ship;
+  Player palyer;
+} shipPlayer;
 
-void chooseShips(Player *player,int random);
+void chooseShips(Player *player, int random);
 void updateCell(Cell *, int, Ship);
 Cell *newCell();
 int isFree(Cell *);
@@ -70,7 +72,7 @@ void putSingleShip(Player *Player, int index);
 void initializeMatriz(Player *Player, int size);
 void print(Player *player, int size);
 
-void startGame(Player *p1, Player *p2,int shmt);
+void startGame(Player *p1, Player *p2, int shmt);
 
 void updateCellShort(Cell *cell, int state);
 int shipSank(Ship ship);
@@ -78,10 +80,11 @@ void print_table(Player *player, int flag, int SIZE);
 void changePlayer();
 int ScanAndShot(Player *source_player, Player *target_player);
 int randomN(int min, int max);
-void write_conf(char *name, Player *p);
-void read_conf(char *name, Player *p);
-int writeSharedMemory(Player p , int SHM_KEY);
-Player *readSharedMemory( int SHM_KEY);
+void write_conf(char *name, Player *p,int quad);
+void read_conf(char *name, Player *p,int quad);
+int writeSharedMemory(Player p, int SHM_KEY);
+Player *readSharedMemory(int SHM_KEY);
 int closeSharedMemory(Player *p);
 int closeWriteSharedMemory(int shmid);
-void startGameNoShared(Player *p1, Player *p2,int semaphore_id);
+void startGameNoShared(Player *p1, Player *p2, int semaphore_id);
+void switchMatrizToQuad(Player *player);

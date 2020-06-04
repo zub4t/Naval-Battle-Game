@@ -58,7 +58,7 @@ void decreaseActiveCell(Ship *ship)
 
 Ship newShip(int type, int n)
 {
-     Ship ship = {type,n};
+     Ship ship = {type, n};
      return ship;
 }
 void printMatriz(Cell matriz[40][40], int n)
@@ -87,7 +87,8 @@ void initializeMatriz(Player *player, int size)
 void putSingleShip(Player *player, int index)
 {
      if (index == 0)
-     {      player->total_pieces+=5;
+     {
+          player->total_pieces += 5;
           Ship barco = newShip(1, 5);
           player->activeShips++;
           int row = player->myShips[index].gravity_point_row;
@@ -145,7 +146,8 @@ void putSingleShip(Player *player, int index)
           }
      }
      if (index == 1)
-     {      player->total_pieces+=5;
+     {
+          player->total_pieces += 5;
           //desenhando o l
           Ship barco = newShip(1, 5);
           player->activeShips++;
@@ -203,7 +205,8 @@ void putSingleShip(Player *player, int index)
           }
      }
      if (index == 2)
-     {      player->total_pieces+=3;
+     {
+          player->total_pieces += 3;
           //desenhando o I
           Ship barco = newShip(1, 3);
           player->activeShips++;
@@ -242,7 +245,8 @@ void putSingleShip(Player *player, int index)
           }
      }
      if (index == 3)
-     {      player->total_pieces+=8;
+     {
+          player->total_pieces += 8;
           //desenhando o Z
           Ship barco = newShip(1, 7);
           player->activeShips++;
@@ -356,7 +360,6 @@ int shipSank(Ship ship)
 
 void print_table(Player *player, int flag, int SIZE)
 {
-     
 
      printf("Os seus barcos\n");
      for (int i = 0; i < SIZE; i++)
@@ -467,19 +470,18 @@ void changePlayer()
 
 int ScanAndShot(Player *source_player, Player *target_player)
 {
-     int x=0, y=0;
+     int x = 0, y = 0;
      while (1)
      {
           printf("escolha o alvo dos seus disparos.\n");
           scanf("%d", &x);
           scanf("%d", &y); // cornfirmar se esta no range
 
-          
           if (target_player->matriz[x][y].state == EMPTY)
           {
                puts("atualizando tiro");
                updateCellShort(&target_player->matriz[x][y], MISSED_SHOT);
-               source_player->matriz[x][y].shotState=MISSED_SHOT;
+               source_player->matriz[x][y].shotState = MISSED_SHOT;
 
                puts("Tiro falhado!");
 
@@ -493,13 +495,13 @@ int ScanAndShot(Player *source_player, Player *target_player)
                target_player->matriz[x][y].bellongsTo.ActiveCells--;
                puts("Barco atingido!");
                target_player->total_pieces--;
-               if (target_player->total_pieces== 0)
+               if (target_player->total_pieces == 0)
                {
                     puts("Venceu o jogo!");
                     //flag para acabar o jogo
                     return 1;
                }
-          
+
                return 0;
           }
 
@@ -515,65 +517,137 @@ int randomN(int lower, int upper)
              (upper - lower + 1)) +
             lower;
 }
-void write_conf(char *name,Player *p){
+void write_conf(char *name, Player *p, int quad)
+{
 
      FILE *f = fopen(name, "w+");
      if (f == NULL)
      {
-     printf("Error opening file!\n");
- 
+          printf("Error opening file!\n");
      }
-     for(int i = 0; i<40;i++){
-          for(int j = 0;j<40;j++){
-               int aux = p->matriz[i][j].state;
-               fprintf(f, "%d",aux);
+     if (quad == 0)
+     {
+          for (int i = 0; i < 40; i++)
+          {
+               for (int j = 0; j < 40; j++)
+               {
+                    int aux = p->matriz[i][j].state;
+                    fprintf(f, "%d", aux);
+               }
+               fprintf(f, "-");
           }
-          fprintf(f, "-");
-     }  
-     fprintf(f, "F");
-     fprintf(f, "%d",p->total_pieces);
+          fprintf(f, "F");
+          fprintf(f, "%d", p->total_pieces);
+     }
+     else
+     {
+          for (int i = 0; i < 40; i++)
+          {
+               for (int j = 0; j < 40; j++)
+               {
+                    quadtree_node_t *aux = quadtree_search_Node(p->tree, i, j);
+                    Cell *aux_cell = aux->key;
+                    fprintf(f, "%d", aux_cell->state);
+               }
+               fprintf(f, "-");
+          }
+          fprintf(f, "F");
+          fprintf(f, "%d", p->total_pieces);
+     }
 
      fclose(f);
 }
-void read_conf(char *name,Player *p){
+void read_conf(char *name, Player *p, int quad)
+{
 
      FILE *fp = fopen(name, "r");
      if (fp == NULL)
      {
           printf("Error opening file!\n");
      }
-     int c;
-     int n = 0, i= 0, j=0;
-  
-     do {
-          c = fgetc(fp);
-          if( c=='F' || i==40) {
-               break ;
-          }
-          if( c=='-') {
-               j=0;
-               i++;
+     if (quad == 0)
+     {
 
-          }
-          if( c=='-') {
-          //  puts("");
-          }else{
-              
-               p->matriz[i][j].state=(c-48);
-               j++;
+          int c;
+          int n = 0, i = 0, j = 0;
 
-          }
-         
-       
-       
-     
-     } while(1);
+          do
+          {
+               c = fgetc(fp);
+               if (c == 'F' || i == 40)
+               {
+                    break;
+               }
+               if (c == '-')
+               {
+                    j = 0;
+                    i++;
+               }
+               if (c == '-')
+               {
+                    //  puts("");
+               }
+               else
+               {
+
+                    p->matriz[i][j].state = (c - 48);
+                    j++;
+               }
+
+          } while (1);
+     }
+     else
+     {
+
+          int c;
+          int n = 0, i = 0, j = 0;
+
+          do
+          {
+               c = fgetc(fp);
+               if (c == 'F' || i == 40)
+               {
+                    break;
+               }
+               if (c == '-')
+               {
+                    j = 0;
+                    i++;
+               }
+               if (c == '-')
+               {
+                    //  puts("");
+               }
+               else
+               {
+                    p->matriz[i][j].state = (c - 48);
+
+                    Cell *cell = &(p->matriz[i][j]);
+                    quadtree_insert(p->tree, i, j,cell);
+
+                    j++;
+               }
+
+          } while (1);
+     }
      char str[3];
      str[0] = fgetc(fp);
-     str[1]= fgetc(fp);
-     str[2]=  '\0';
+     str[1] = fgetc(fp);
+     str[2] = '\0';
      int total = atoi(str);
-     p->total_pieces= total;
+     p->total_pieces = total;
 
      fclose(fp);
+}
+void switchMatrizToQuad(Player *player)
+{
+
+     for (int i = 0; i < 40; i++)
+     {
+
+          for (int j = 0; j < 40; j++)
+          {
+               quadtree_insert(player->tree, i, j, &player->matriz[i][j]);
+          }
+     }
 }
